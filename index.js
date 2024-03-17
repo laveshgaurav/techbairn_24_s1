@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -33,13 +34,11 @@ app.use(morgan("tiny"));
 //   }
 // });
 
-app.listen(8000, () => {
+app.listen(process.env.PORT, () => {
   console.clear();
   console.log("Server Running on 8000..");
   mongoose
-    .connect(
-      "mongodb+srv://webmonk:webmonk@cluster0.gp38f.mongodb.net/ecommerce?retryWrites=true&w=majority"
-    )
+    .connect(process.env.DB_CONNECTION)
     .then(() => console.log("DB Connected"))
     .catch((e) => console.log(e));
 });
