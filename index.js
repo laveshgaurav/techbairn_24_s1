@@ -35,7 +35,7 @@ app.use(morgan("tiny"));
 // });
 
 app.listen(process.env.PORT, () => {
-  console.clear();
+  // console.clear();
   console.log("Server Running on 8000..");
   mongoose
     .connect(process.env.DB_CONNECTION)
