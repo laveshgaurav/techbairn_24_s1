@@ -24,6 +24,9 @@ const inventorySchema = new mongoose.Schema({
       type: Number,
     },
   },
+  quantity: {
+    type: Number,
+  },
 });
 
 module.exports = mongoose.model("inventories", inventorySchema);
