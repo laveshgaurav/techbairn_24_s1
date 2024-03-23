@@ -1,10 +1,12 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const userModel = require("../models/userModel");
+const AsyncWrapper = require("../middlewares/errorWrapper");
 const router = express.Router();
 
-router.post("/sign-up", async (req, res) => {
-  try {
+router.post(
+  "/sign-up",
+  AsyncWrapper(async (req, res) => {
     const existingUser = await userModel.findOne({
       email: req.body.email,
     });
@@ -25,12 +27,41 @@ router.post("/sign-up", async (req, res) => {
       status: true,
       message: "Signup successful",
     });
-  } catch (e) {
-    return res.send({
-      status: false,
-      message: e.message,
+  })
+);
+
+router.post(
+  "/sign-in",
+  AsyncWrapper(async (req, res) => {
+    const existingUser = await userModel.findOne({
+      email: req.body.email,
     });
-  }
-});
+    existingUser.map(() => {});
+    console.log(existingUser);
+    if (!existingUser) {
+      return res.send({
+        status: false,
+        message: "User doesn't exist.",
+      });
+    }
+
+    const isValidPwd = bcrypt.compareSync(
+      req.body.password,
+      existingUser.password
+    );
+
+    if (!isValidPwd) {
+      return res.send({
+        status: false,
+        message: "Wrong Password",
+      });
+    } else {
+      return res.send({
+        status: true,
+        message: "Signin successful",
+      });
+    }
+  })
+);
 
 module.exports = router;

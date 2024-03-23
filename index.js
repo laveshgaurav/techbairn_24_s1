@@ -7,6 +7,7 @@ const { default: mongoose } = require("mongoose");
 const InventoryModel = require("./models/inventoryModel");
 const userRoutes = require("./routes/userRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const errorHandler = require("./middlewares/errorHandler");
 
 app.use(cors());
 app.use(
@@ -15,14 +16,15 @@ app.use(
   })
 );
 
+app.use(express.json());
+app.use(morgan("tiny"));
+
 app.get("/", (req, res) => {
   return res.send({
     status: true,
     message: "Server is running on 8000",
   });
 });
-app.use(express.json());
-app.use(morgan("tiny"));
 
 app.use("/user", userRoutes);
 app.use("/order", orderRoutes);
@@ -49,6 +51,8 @@ app.use("/order", orderRoutes);
 //     });
 //   }
 // });
+
+app.use(errorHandler);
 
 app.listen(process.env.PORT, () => {
   // console.clear();
