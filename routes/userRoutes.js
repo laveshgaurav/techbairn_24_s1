@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const userModel = require("../models/userModel");
 const AsyncWrapper = require("../middlewares/errorWrapper");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 router.post(
@@ -36,7 +37,7 @@ router.post(
     const existingUser = await userModel.findOne({
       email: req.body.email,
     });
-    existingUser.map(() => {});
+    // existingUser.map(() => {});
     console.log(existingUser);
     if (!existingUser) {
       return res.send({
@@ -56,9 +57,17 @@ router.post(
         message: "Wrong Password",
       });
     } else {
+      const access_token = jwt.sign(
+        {
+          id: existingUser._id,
+        },
+        "Hello_World"
+      );
+
       return res.send({
         status: true,
         message: "Signin successful",
+        access_token,
       });
     }
   })

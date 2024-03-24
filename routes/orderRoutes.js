@@ -1,6 +1,7 @@
 const express = require("express");
 const orderModel = require("../models/orderModel");
 const inventoryModel = require("../models/inventoryModel");
+const AsyncWrapper = require("../middlewares/errorWrapper");
 const router = express.Router();
 
 router.post("/create-new-order", async (req, res) => {
@@ -18,8 +19,10 @@ router.post("/create-new-order", async (req, res) => {
     });
 
     return res.send({
+      // newOrder,
       status: true,
       message: "Order Created",
+      userId: req.userId,
     });
   } catch (e) {
     return res.send({
@@ -28,6 +31,23 @@ router.post("/create-new-order", async (req, res) => {
     });
   }
 });
+
+router.get(
+  "/get-all-orders",
+  AsyncWrapper(async (req, res) => {
+    const userId = req.userId;
+
+    const orders = await orderModel
+      .find({
+        user: userId,
+      })
+      .populate("products.itemId");
+
+    return res.send({
+      orders,
+    });
+  })
+);
 
 router.get("/get-order-by-id/:id", async (req, res) => {
   try {

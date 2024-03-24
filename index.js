@@ -8,6 +8,7 @@ const InventoryModel = require("./models/inventoryModel");
 const userRoutes = require("./routes/userRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const errorHandler = require("./middlewares/errorHandler");
+const Auth = require("./middlewares/Auth");
 
 app.use(cors());
 app.use(
@@ -27,7 +28,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRoutes);
-app.use("/order", orderRoutes);
+app.use("/order", Auth, orderRoutes);
 // app.post("/create-inventory", async (req, res) => {
 //   try {
 //     let data = req.body.data;
