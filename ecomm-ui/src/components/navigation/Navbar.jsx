@@ -20,6 +20,7 @@ function Navbar({ pageTitle = "" }) {
             <NavLink
               className={({ isActive }) => (isActive ? "active" : "")}
               to="/about-us"
+              // target="_blank"
             >
               About Us
             </NavLink>
